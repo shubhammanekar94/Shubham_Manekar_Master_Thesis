@@ -1,8 +1,11 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from datetime import datetime
 
+def import_dataset(dataset='KDDCUP'):
 
-def import_kddcup():
+    now = datetime.now()
+    print(f'{now} - {dataset} Data Import Initialized..')
 
     column_names = [
         'duration', 'protocol_type', 'service', 'flag', 'src_bytes',
@@ -16,7 +19,8 @@ def import_kddcup():
         'dst_host_srv_rerror_rate', 'deu_ruim_ou_nao'
         ]
 
-    raw_df = pd.read_csv('data/raw/corrected.csv', header=None, names=column_names)
+    raw_df = pd.read_csv(f'data/raw/{dataset}.csv', header=None, names=column_names)
+    raw_df = raw_df.drop_duplicates(keep='first').reset_index(drop=True)
     raw_df['deu_ruim_ou_nao']=raw_df['deu_ruim_ou_nao'].str.replace('.','')
 
     global categorical_features
@@ -25,9 +29,15 @@ def import_kddcup():
     global numerical_features
     numerical_features = list(raw_df.select_dtypes(exclude=['object']).columns)
 
+    now = datetime.now()
+    print(f'{now} - {dataset} Data Imported Successfully!')
+
     return raw_df
 
 def assign_attack_types(raw_df):
+
+    now = datetime.now()
+    print(f'{now} - Attacks assignment initialized..')
     
     DoS = list([
         'smurf', 'pod', 'neptune', 'teardrop', 'land', 'apache2', 
@@ -61,10 +71,48 @@ def assign_attack_types(raw_df):
     for attack in R2L:
         raw_df['deu_ruim_ou_nao']=raw_df['deu_ruim_ou_nao'].str.replace(attack,'R2L')
 
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] == 'normal', 'deu_ruim_ou_nao'] = 0
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] == 'Probe', 'deu_ruim_ou_nao'] = 1
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] == 'DoS', 'deu_ruim_ou_nao'] = 2
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] == 'U2R', 'deu_ruim_ou_nao'] = 3
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] == 'R2L', 'deu_ruim_ou_nao'] = 4
+
+    raw_df['deu_ruim_ou_nao']=raw_df['deu_ruim_ou_nao'].astype(int)
+
+    categorical_features = list(raw_df.select_dtypes(include=['object']).columns)
+    numerical_features = list(raw_df.select_dtypes(exclude=['object']).columns)
+
+    now = datetime.now()
+    print(f'{now} - Attacks assignment successful!')
+
     return raw_df
 
-def label_encoding(raw_df):
+
+def assign_binary_target(raw_df):
+
+    now = datetime.now()
+    print(f'{now} - Target binary assignment initialized..')
+
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] != 'normal', 'deu_ruim_ou_nao'] = 1
+    raw_df.loc[raw_df['deu_ruim_ou_nao'] == 'normal', 'deu_ruim_ou_nao'] = 0
+
+    raw_df['deu_ruim_ou_nao']=raw_df['deu_ruim_ou_nao'].astype(int)
+
+    categorical_features = list(raw_df.select_dtypes(include=['object']).columns)
+    numerical_features = list(raw_df.select_dtypes(exclude=['object']).columns)
+
+    now = datetime.now()
+    print(f'{now} - Binary assignment successful!')
+
+    return raw_df
     
+
+
+def label_encoding(raw_df,atype='',dataset='KDDCUP'):
+    
+    now = datetime.now()
+    print(f'{now} - Label encoding initialized..')
+
     lab_enc_df = raw_df.copy()
 
     labelencoder = LabelEncoder()
@@ -72,13 +120,16 @@ def label_encoding(raw_df):
     for c in categorical_features:
         lab_enc_df[c] = labelencoder.fit_transform(lab_enc_df[c])
 
-    lab_enc_df.to_csv('data/processed/enc_df.csv',index=False)
-
-    print("Label Encoding Successful! Encoded Data saved as data/processed/enc_df.csv")
+    lab_enc_df.to_csv(f'data/processed/{dataset}_{atype}_enc_df.csv',index=False)
+    
+    now = datetime.now()
+    print(f'{now} - Label Encoding Successful! Encoded Data saved as data/processed/enc_df_{atype}.csv')
 
     return lab_enc_df
 
-def scaling(lab_enc_df):
+def scaling(lab_enc_df,atype='',dataset='KDDCUP'):
+    now = datetime.now()
+    print(f'{now} - Data scaling initialized..')
 
     scaled_df = lab_enc_df.copy()
 
@@ -90,8 +141,9 @@ def scaling(lab_enc_df):
 
     scaled_df[col_names] = features
 
-    scaled_df.to_csv('data/processed/scaled_enc_df.csv',index=False)
+    scaled_df.to_csv(f'data/processed/{dataset}_{atype}_scaled_enc_df.csv',index=False)
 
-    print("Scaling Successful! Scaled Data saved as data/processed/scaled_enc_df.csv")
+    now = datetime.now()
+    print(f'{now} - Scaling Successful! Scaled Data saved as data/processed/scaled_enc_df_{atype}.csv')
 
     return scaled_df

@@ -24,6 +24,8 @@ Project Organization
     ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
     ├── src                <- Source code for use in this project.
     │   │
+    │   ├── main.py        <- Main python file to regulate the flow of the code
+    │   │
     │   ├── data
     │   │  ├── processed      <- The final, canonical data sets for modeling.
     │   │  └── raw            <- The original, immutable data dump.
@@ -31,14 +33,18 @@ Project Organization
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
     │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
+    │   ├── Logs           <- Generated Log Files to keep track of the flow of the code
+    │   │
+    │   ├── models         <- Scripts to train models and then use trained models to make predictions
+    │   │   └── model.py                
+    │   │
+    │   ├── preprocessing  <- Script to develope the preprocessing pipeline
+    │   │   └── preprocessing.py
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-
+    │       ├── visualize.py   
+            └── Figures    <- Generated graphics and figures to be used in reporting
+    
 
 --------
 
