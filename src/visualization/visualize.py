@@ -10,7 +10,7 @@ def Multi_Class_Performance_BarChart(MI_perf_df, CORR_perf_df, RFFI_perf_df, SHA
     print(f'{now} - Initializing {str.upper(metric)} MultiClass comparision Bar Chart visualization..')
 
     plt.rcParams['figure.dpi'] = 150
-    X = ['Class 0','Class 1','Class 2','Class 3','Class 4']
+    X = ['Normal','Probe','DoS','U2R','R2L']
     
     MI_acc = list(MI_perf_df[metric])
     CORR_acc = list(CORR_perf_df[metric])
@@ -37,7 +37,7 @@ def Multi_Class_Performance_LineChart(MI_perf_df, CORR_perf_df, RFFI_perf_df, SH
     print(f'{now} - Initializing {str.upper(metric)} MultiClass comparision Line Chart visualization..')
 
     plt.rcParams['figure.dpi'] = 150
-    X = ['Class 0','Class 1','Class 2','Class 3','Class 4']
+    X = ['Normal','Probe','DoS','U2R','R2L']
     
     SHAP_acc = list(SHAP_perf_df[metric])
     MI_acc = list(MI_perf_df[metric])
@@ -105,7 +105,7 @@ def Binary_Performance_BarChart(MI_perf_df, CORR_perf_df, RFFI_perf_df, SHAP_per
     print(f'{now} - Initializing {str.upper(metric)} Binary comparision Bar Chart visualization..')
 
     plt.rcParams['figure.dpi'] = 150
-    X = ['Class 0','Class 1']
+    X = ['Normal','Anomaly']
     
     MI_acc = list(MI_perf_df[metric])
     CORR_acc = list(CORR_perf_df[metric])
@@ -126,29 +126,39 @@ def Binary_Performance_BarChart(MI_perf_df, CORR_perf_df, RFFI_perf_df, SHAP_per
     now = datetime.now()
     print(f'{now} - {str.upper(metric)} BinaryClass comparision bar chart visualization generated Successfully!')
 
-def Binary_Performance_LineChart(MI_perf_df, CORR_perf_df, RFFI_perf_df, SHAP_perf_df, metric,k,dataset):
+def Binary_Performance_ScatterChart(MI_perf_df, CORR_perf_df, RFFI_perf_df, SHAP_perf_df, metric,k,dataset):
 
     now = datetime.now()
-    print(f'{now} - Initializing {str.upper(metric)} BinaryClass comparision Line Chart visualization..')
+    print(f'{now} - Initializing {str.upper(metric)} BinaryClass comparision Scatter Chart visualization..')
 
     plt.rcParams['figure.dpi'] = 150
-    X = ['Class 0','Class 1']
     
-    SHAP_acc = list(SHAP_perf_df[metric])
-    MI_acc = list(MI_perf_df[metric])
-    CORR_acc = list(CORR_perf_df[metric])
-    RFFI_acc = list(RFFI_perf_df[metric])
+    X = ['Normal','Anomaly']
     
-    df = pd.DataFrame({'CORR_acc': CORR_acc,
-                   'RFFI_acc': RFFI_acc,
-                   'SHAP_acc': SHAP_acc, 
-                   'MI_acc': MI_acc,                
-                   }, index=X)
-    ax = df.plot.line()
+    SHAP = list(SHAP_perf_df[metric])
+    MI = list(MI_perf_df[metric])
+    CORR = list(CORR_perf_df[metric])
+    RFFI = list(RFFI_perf_df[metric])
+    
+    df = pd.DataFrame({'CORR': CORR,
+                   'RFFI': RFFI,
+                   'SHAP': SHAP, 
+                   'MI': MI,
+                   'Class' : X
+                   })
+    c=['r','g','orange', 'purple']
+    Y= ['CORR','RFFI','SHAP','MI']
+    fig, ax = plt.subplots()
 
+    for m in range(len(Y)):
+        ax.scatter(x=df['Class'], y=df[Y[m]], color=c[m],label=df[Y[m]].name)    
+
+    plt.xlabel('Class')
+    plt.ylabel(metric)
     plt.title(str.upper(metric) + ' PERFORMANCE')
+    plt.grid(True)
     plt.legend()
-    plt.savefig(f"visualization/Figures/{dataset}_Binary_k{str(k)}_{metric}_Line.png", dpi=300, bbox_inches='tight')
+    plt.savefig(f"visualization/Figures/{dataset}_Binary_k{str(k)}_{metric}_Scatter.png", dpi=300, bbox_inches='tight')
 
 
     now = datetime.now()

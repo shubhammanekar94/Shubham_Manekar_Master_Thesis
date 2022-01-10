@@ -105,13 +105,13 @@ def binary_class_detection(dataset):
 
         for metric in metrics:
             visualize.Binary_Performance_BarChart(MI_performance, CORR_performance, RFFI_performance, SHAP_performance, metric,k,dataset)
-            visualize.Binary_Performance_LineChart(MI_performance, CORR_performance, RFFI_performance, SHAP_performance, metric,k,dataset)
+            visualize.Binary_Performance_ScatterChart(MI_performance, CORR_performance, RFFI_performance, SHAP_performance, metric,k,dataset)
 
-        i1 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Accuracy_Line.png')
-        i2 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_F1_Score_Line.png')
-        i3 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Precision_Line.png')
-        i4 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Recall_Line.png')
-        visualize.Binary_Summary_Plots(i1,i2,i3,i4, 'Line_Chart',k,dataset)
+        i1 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Accuracy_Scatter.png')
+        i2 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_F1_Score_Scatter.png')
+        i3 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Precision_Scatter.png')
+        i4 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Recall_Scatter.png')
+        visualize.Binary_Summary_Plots(i1,i2,i3,i4, 'Scatter_Chart',k,dataset)
 
         i1 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_Accuracy_Bar.png')
         i2 = str(f'visualization/Figures/{dataset}_Binary_k{str(k)}_F1_Score_Bar.png')
@@ -131,8 +131,8 @@ def binary_class_detection(dataset):
 
 
 dataset = 'KDDCUP'
-multi_class_detection(dataset)
 binary_class_detection(dataset)
+multi_class_detection(dataset)
 
 dataset = 'NSLKDD'
 binary_class_detection(dataset)
