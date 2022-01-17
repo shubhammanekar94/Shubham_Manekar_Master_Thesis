@@ -41,10 +41,10 @@ Project Organization
     │   ├── preprocessing  <- Script to develope the preprocessing pipeline
     │   │   └── preprocessing.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       ├── visualize.py   
-            └── Figures    <- Generated graphics and figures to be used in reporting
-    
+    │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
+    │   │   ├── visualize.py   
+    │   │   ├── Figures    <- Generated graphics and figures to be used in reporting
+    │   │   └── Figures_Summary     <- Summary of graphics and figures for quick look
 
 --------
 

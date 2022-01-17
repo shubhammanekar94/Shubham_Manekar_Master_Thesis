@@ -94,7 +94,7 @@ def Multi_Class_Summary_Plots(image1,image2, image3, image4, title_text,k,datase
     plt.imshow(Image4)
     plt.axis('off')
     
-    plt.savefig(f"visualization/Figures/{dataset}_MultiClass_k{str(k)}_{title_text}_Summary Plot.png", dpi=300, bbox_inches='tight')
+    plt.savefig(f"visualization/Figures_Summary/{dataset}_MultiClass_k{str(k)}_{title_text}_Summary Plot.png", dpi=300, bbox_inches='tight')
 
     now = datetime.now()
     print(f'{now} - {title_text} MultiClass summary plot completed!')
@@ -199,7 +199,7 @@ def Binary_Summary_Plots(image1,image2, image3, image4, title_text,k,dataset):
     plt.imshow(Image4)
     plt.axis('off')
     
-    plt.savefig(f"visualization/Figures/{dataset}_Binary_k{str(k)}_{title_text}_Summary_Plot.png", dpi=300, bbox_inches='tight')
+    plt.savefig(f"visualization/Figures_Summary/{dataset}_Binary_k{str(k)}_{title_text}_Summary_Plot.png", dpi=300, bbox_inches='tight')
 
     now = datetime.now()
     print(f'{now} - {title_text} BinaryClass summary plot completed!')

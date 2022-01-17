@@ -6,9 +6,23 @@ from visualization import visualize
 import sys
 from datetime import datetime
 from tqdm import tqdm
+import typer
+import warnings
 
+warnings.filterwarnings('ignore')
 
-def multi_class_detection(dataset):
+app = typer.Typer(help="Welcome to the CLI user manager for Intrusion Anomaly Detection Comparative Analysis!")
+
+@app.command()
+def multi_class_detection(dataset:str = typer.Argument("KDDCUP", help="Name of the Dataset", metavar="✨dataset✨")):
+    """
+    This module performs the Multi Class Anomaly Detection Analysis of the Attacks for the given dataset.
+
+    """
+    message_start = typer.style("Multi Class Anomaly Detection Analysis" , fg=typer.colors.GREEN, bold=True)
+    message_end = typer.style(f"{dataset}", fg=typer.colors.MAGENTA, bold=True)
+    message = "Strting " + message_start + " for " + message_end + " Dataset!"
+    typer.echo(message)
 
     old_stdout = sys.stdout
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -25,7 +39,7 @@ def multi_class_detection(dataset):
     lab_enc_df = preprocessing.label_encoding(raw_df,atype,dataset)
     scaled_enc_df = preprocessing.scaling(lab_enc_df,atype,dataset)
 
-    k_list = [28,21,12]
+    k_list = [32,28,21,11]
 
     for k in tqdm(k_list):
 
@@ -68,7 +82,16 @@ def multi_class_detection(dataset):
     print("Closing LOG!")
     log_file.close()
 
-def binary_class_detection(dataset):
+@app.command()
+def binary_class_detection(dataset:str = typer.Argument("KDDCUP", help="Name of the Dataset", metavar="✨dataset✨")):
+    """
+    This module performs the Binary Class Anomaly Detection Analysis for the given dataset.
+    """
+
+    message_start = typer.style("Binary Class Anomaly Detection Analysis" , fg=typer.colors.GREEN, bold=True)
+    message_end = typer.style(f"{dataset}", fg=typer.colors.MAGENTA, bold=True)
+    message = "Strting " + message_start + " for " + message_end + " Dataset!"
+    typer.echo(message)
 
     old_stdout = sys.stdout
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -85,7 +108,7 @@ def binary_class_detection(dataset):
     lab_enc_df = preprocessing.label_encoding(raw_df,atype,dataset)
     scaled_enc_df = preprocessing.scaling(lab_enc_df,atype,dataset)
 
-    k_list = [28,21,12]
+    k_list = [35,28,21,12]
 
     for k in tqdm(k_list):
 
@@ -128,11 +151,5 @@ def binary_class_detection(dataset):
     print("Closing LOG!")
     log_file.close()
 
-
-
-dataset = 'KDDCUP'
-binary_class_detection(dataset)
-multi_class_detection(dataset)
-
-dataset = 'NSLKDD'
-binary_class_detection(dataset)
+if __name__ == "__main__":
+    app()
