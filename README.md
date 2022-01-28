@@ -46,6 +46,37 @@ Project Organization
     │   │   ├── Figures    <- Generated graphics and figures to be used in reporting
     │   │   └── Figures_Summary     <- Summary of graphics and figures for quick look
 
+This allows you choose the mode of your analysis and the dataset in the command line interface. Steps to be followed for smooth execution:
+
+1. Please install requirements.txt using following command:
+        pip install -r requirements.txt
+2. Run: cd src/
+3. Run: python main.py --help
+        This command will show you a short desciption and available commands for modes of analysis which are:
+        1. binary-class-detection
+        2. multi-class-detection
+4. Once you select the mode of analysis, run the following:
+        python main.py multi-class-detection --help 
+                            OR
+        python main.py binary-class-detection --help
+5. Both these commands will show you a short desciption and argument which is dataset. The available datasets are:
+        1. KDDCUP
+        2. NSLKDD
+6. Once you decide your dataset (Suppose you selected binary analysis for NSLKDD), Run:
+        python main.py binary-class-detection NSLKDD
+
+Note: Multi-Class analysis is only available for KDDCUP.
+
+To summarize:
+Run the following commands based on your choice of mode of analysis and dataset:
+        python main.py binary-class-detection NSLKDD
+                            OR
+        python main.py binary-class-detection KDDCUP
+                            OR
+        python main.py multi-class-detection KDDCUP
+
+Results can be seen in the "visualization" folder.
+
 --------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
