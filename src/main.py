@@ -108,7 +108,7 @@ def binary_class_detection(dataset:str = typer.Argument("KDDCUP", help="Name of 
     lab_enc_df = preprocessing.label_encoding(raw_df,atype,dataset)
     scaled_enc_df = preprocessing.scaling(lab_enc_df,atype,dataset)
 
-    k_list = [35,28,21,12]
+    k_list = [32,28,21,11]
 
     for k in tqdm(k_list):
 
