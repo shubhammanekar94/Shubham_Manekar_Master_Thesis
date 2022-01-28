@@ -49,7 +49,7 @@ Project Organization
 This allows you choose the mode of your analysis and the dataset in the command line interface. Steps to be followed for smooth execution:
 
 1. Please install requirements.txt using following command:
-        pip install -r requirements.txt
+- pip install -r requirements.txt
 2. Run: cd src/
 3. Run: python main.py --help
         This command will show you a short desciption and available commands for modes of analysis which are:
