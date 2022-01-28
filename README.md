@@ -52,18 +52,18 @@ This allows you choose the mode of your analysis and the dataset in the command 
 - pip install -r requirements.txt
 2. Run: cd src/
 3. Run: python main.py --help
-        This command will show you a short desciption and available commands for modes of analysis which are:
-        1. binary-class-detection
-        2. multi-class-detection
+- This command will show you a short desciption and available commands for modes of analysis which are:
+    - 1. binary-class-detection
+    - 2. multi-class-detection
 4. Once you select the mode of analysis, run the following:
-        python main.py multi-class-detection --help 
-                            OR
-        python main.py binary-class-detection --help
+- python main.py multi-class-detection --help 
+-                            OR
+-        python main.py binary-class-detection --help
 5. Both these commands will show you a short desciption and argument which is dataset. The available datasets are:
-        1. KDDCUP
-        2. NSLKDD
+-        1. KDDCUP
+-        2. NSLKDD
 6. Once you decide your dataset (Suppose you selected binary analysis for NSLKDD), Run:
-        python main.py binary-class-detection NSLKDD
+-        python main.py binary-class-detection NSLKDD
 
 Note: Multi-Class analysis is only available for KDDCUP.
 
