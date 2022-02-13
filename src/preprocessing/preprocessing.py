@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from datetime import datetime
+import numpy as np
 
 def import_dataset(dataset='KDDCUP'):
 
@@ -107,7 +108,6 @@ def assign_binary_target(raw_df):
     return raw_df
     
 
-
 def label_encoding(raw_df,atype='',dataset='KDDCUP'):
     
     now = datetime.now()
@@ -147,3 +147,57 @@ def scaling(lab_enc_df,atype='',dataset='KDDCUP'):
     print(f'{now} - Scaling Successful! Scaled Data saved as data/processed/scaled_enc_df_{atype}.csv')
 
     return scaled_df
+
+def import_UNSW(dataset='UNSW'):
+
+    now = datetime.now()
+    print(f'{now} - {dataset} Data Import Initialized..')
+
+    df_train = pd.read_csv('data/raw/training_benchmark.csv',header=None)
+    df_test = pd.read_csv('data/raw/testing_benchmark.csv',header=None)
+
+    df_train.replace([np.inf, -np.inf], np.nan, inplace=True)
+    df_train=df_train.dropna()
+    df_train=df_train.fillna(method="ffill")
+    df_train = df_train.apply(pd.to_numeric,errors="coerce")
+
+    df_test.replace([np.inf, -np.inf], np.nan, inplace=True)
+    df_test=df_test.dropna()
+    df_test=df_test.fillna(method="ffill")
+    df_test = df_test.apply(pd.to_numeric,errors="coerce")
+
+    df_train = df_train.drop([0],axis = 1)
+    df_test = df_test.drop([0],axis = 1)
+
+    df_train = df_train.drop_duplicates(keep='first').reset_index(drop=True)
+    df_test = df_test.drop_duplicates(keep='first').reset_index(drop=True)
+
+    now = datetime.now()
+    print(f'{now} - {dataset} Data Imported Successfully!')
+
+    return df_train, df_test
+
+def UNSW_preprocess(df_train, df_test, dataset='UNSW'):
+    now = datetime.now()
+    print(f'{now} - {dataset} Pre-processing - Initialized..')
+
+    global numerical_features_train, numerical_features_test
+    numerical_features_train = list(df_train.select_dtypes(exclude=['object']).columns)
+    numerical_features_test = list(df_test.select_dtypes(exclude=['object']).columns)
+
+    scaled_enc_df_train = df_train.copy()
+    scaled_enc_df_test = df_test.copy()
+
+    col_names = numerical_features_train
+    features = scaled_enc_df_train[col_names]
+    scaler = MinMaxScaler().fit(features.values)
+    features = scaler.transform(features.values)
+    scaled_enc_df_train[col_names] = features
+
+    col_names = numerical_features_test
+    features = scaled_enc_df_test[col_names]
+    scaler = MinMaxScaler().fit(features.values)
+    features = scaler.transform(features.values)
+    scaled_enc_df_test[col_names] = features
+
+    return scaled_enc_df_train, scaled_enc_df_test

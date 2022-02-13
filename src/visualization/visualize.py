@@ -203,3 +203,72 @@ def Binary_Summary_Plots(image1,image2, image3, image4, title_text,k,dataset):
 
     now = datetime.now()
     print(f'{now} - {title_text} BinaryClass summary plot completed!')
+
+def UNSW_Binary_Performance(MI_perf_df, CORR_perf_df, RFFI_perf_df, SHAP_perf_df, metric,k,dataset):
+    
+    now = datetime.now()
+    print(f'{now} - Initializing {str.upper(metric)} BinaryClass comparision Scatter Chart visualization..')
+
+    plt.rcParams['figure.dpi'] = 150
+    
+    X = ['Normal','Anomaly']
+    
+    SHAP = list(SHAP_perf_df[metric])
+    MI = list(MI_perf_df[metric])
+    CORR = list(CORR_perf_df[metric])
+    RFFI = list(RFFI_perf_df[metric])
+    
+    df = pd.DataFrame({'CORR': CORR,
+                   'RFFI': RFFI,
+                   'SHAP': SHAP, 
+                   'MI': MI,
+                   'Class' : X
+                   })
+    c=['r','g','orange', 'purple']
+    Y= ['CORR','RFFI','SHAP','MI']
+    fig, ax = plt.subplots()
+
+    for m in range(len(Y)):
+        ax.scatter(x=df['Class'], y=df[Y[m]], color=c[m],label=df[Y[m]].name)    
+
+    plt.xlabel('Class')
+    plt.ylabel(metric)
+    plt.title(str.upper(metric) + ' PERFORMANCE')
+    plt.grid(True)
+    plt.legend()
+    plt.savefig(f"visualization/Figures/{dataset}_Binary_k{str(k)}_{metric}_Scatter.png", dpi=300, bbox_inches='tight')
+
+
+    now = datetime.now()
+    print(f'{now} - {str.upper(metric)} BinaryClass comparision line chart visualization generated Successfully!')
+
+def overfitting_graph(train_scores, validation_scores, technique, NOC, k,dataset):
+    
+    now = datetime.now()
+    print(f'{now} - Initializing {str.upper(technique)} {NOC} - Class Overfitting visualization..')
+
+    plt.rcParams['figure.dpi'] = 150
+
+    length = list(range(len(train_scores)))
+    x_axis = [x*7000 for x in length]
+
+    for i in range(NOC):
+
+        y_axis_train = train_scores[:,i]
+        y_axis_val = validation_scores[:,i]
+
+        df = pd.DataFrame({'Training Accuracy': y_axis_train,
+                    'Validation Accuracy': y_axis_val
+                    }, index=x_axis)
+        ax = df.plot.line()
+
+        plt.title(f' {str.upper(technique)} CLASS {str(i)} PERFORMANCE')
+        plt.xlabel('Training Sizes')
+        plt.ylabel('Accuracy Score')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(f"visualization/Figures/{dataset}_{str.upper(technique)}_class_{i}_k{str(k)}_overfitting.png", dpi=300, bbox_inches='tight')
+
+
+    now = datetime.now()
+    print(f'{now} - {str.upper(technique)} {NOC} - Class Overfitting visualization generated Successfully!')
