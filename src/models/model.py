@@ -7,6 +7,7 @@ from sklearn.model_selection import RandomizedSearchCV, learning_curve
 from datetime import datetime
 import dataframe_image as dfi
 
+
 def model_performance(df_pp, features, technique, k, atype='', dataset='KDDCUP'):
 
     now = datetime.now()
@@ -64,7 +65,7 @@ def model_performance(df_pp, features, technique, k, atype='', dataset='KDDCUP')
     filename = "visualization/Figures/"+dataset+'_'+atype+"_k"+str(k)+'_'+str(technique)+"_Performance_Report" + ".png"
     dfi.export(report_df,filename)
 
-    performance_dictionary={'Technique':[], 'Class':[],'Accuracy':[],'F1_Score':[],'Precision':[],'Recall':[], 'HP_n_estimators':[], 'HP_max_depth':[], 'k':[]}
+    performance_dictionary={'Technique':[], 'k':[], 'HP_n_estimators':[], 'HP_max_depth':[], 'Class':[],'Accuracy':[],'F1_Score':[],'Precision':[],'Recall':[]}
 
     f1 = list(f1_score(y_test, y_pred, average=None))
     matrix = confusion_matrix(y_test, y_pred)
@@ -197,3 +198,61 @@ def UNSW_model_performance(df_train, df_test, features, technique, k, atype='', 
     print(f'{now} - Model performance dataframe created Successfully!')
 
     return df, train_scores, validation_scores
+
+
+def manual_model_performance(df_pp, features, technique, k, n_estimators, max_depth,  atype='', dataset='KDDCUP'):
+
+    now = datetime.now()
+    print(f'{now} - Model training started!')
+
+    X = df_pp[features]
+    y = df_pp.iloc[:,-1]
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state = 42)
+
+    n_estimators = n_estimators
+    max_depth = max_depth
+    criterion = 'entropy'
+
+
+    clf=RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, criterion=criterion, random_state=42)
+    clf.fit(X_train.values,y_train.values)
+    y_pred=clf.predict(X_test)
+
+    plot_confusion_matrix(clf, X_test, y_test)
+    plt.title(f"{technique}_Confusion_Matrix")
+    plt.savefig(f"visualization/Figures/{dataset}_{atype}_k{str(k)}_{str(technique)}_Confusion_Matrix.png", dpi=300, bbox_inches='tight')
+    
+    sk_report = classification_report(
+    digits=6,
+    y_true=y_test, 
+    y_pred=y_pred,
+    output_dict=True)
+
+    report_df = pd.DataFrame(sk_report).transpose()
+    filename = "visualization/Figures/"+dataset+'_'+atype+"_k"+str(k)+'_'+str(technique)+"_Performance_Report" + ".png"
+    dfi.export(report_df,filename)
+
+    performance_dictionary={'Technique':[], 'k':[], 'HP_n_estimators':[], 'HP_max_depth':[], 'Class':[],'Accuracy':[],'F1_Score':[],'Precision':[],'Recall':[]}
+
+    f1 = list(f1_score(y_test, y_pred, average=None))
+    matrix = confusion_matrix(y_test, y_pred)
+    acc = list(matrix.diagonal()/matrix.sum(axis=1))
+    pr = list(precision_score(y_test, y_pred, average=None))
+    rl = list(recall_score(y_test, y_pred, average=None))
+
+    for i in range(len(f1)):
+        performance_dictionary['Technique'].append(technique)
+        performance_dictionary['Class'].append(i)
+        performance_dictionary['Accuracy'].append(acc[i])
+        performance_dictionary['F1_Score'].append(f1[i])
+        performance_dictionary['Precision'].append(pr[i])
+        performance_dictionary['Recall'].append(rl[i])
+        performance_dictionary['HP_n_estimators'].append(n_estimators)
+        performance_dictionary['HP_max_depth'].append(max_depth)
+        performance_dictionary['k'].append(k)
+        
+
+    df = pd.DataFrame.from_dict(performance_dictionary)
+
+    return df

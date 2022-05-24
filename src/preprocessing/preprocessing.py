@@ -191,7 +191,7 @@ def UNSW_preprocess(df_train, df_test, dataset='UNSW'):
     col_names = numerical_features_train
     features = scaled_enc_df_train[col_names]
     scaler = MinMaxScaler().fit(features.values)
-    features = scaler.transform(features.values)
+    features = scaler.transform(features.values)    
     scaled_enc_df_train[col_names] = features
 
     col_names = numerical_features_test
