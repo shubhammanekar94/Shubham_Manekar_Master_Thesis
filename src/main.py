@@ -11,6 +11,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
+#Command line interface initialization
 app = typer.Typer(help="Welcome to the CLI user manager for Intrusion Anomaly Detection Comparative Analysis!")
 
 @app.command()
